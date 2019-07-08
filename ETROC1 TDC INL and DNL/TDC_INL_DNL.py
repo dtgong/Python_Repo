@@ -31,16 +31,10 @@ def time_to_digital(time_interval, Tfr_Delay_Cell, Trf_Delay_Cell):
         Delay_Cell_Time = 0
         if sum <= time_interval:
             digital_code += 1
-            if (i/63)%2 == 0:
-                if i%2 == 0:
-                    Delay_Cell_Time += Tfr_Delay_Cell[i%63]
-                else:
-                    Delay_Cell_Time += Trf_Delay_Cell[i%63]
+            if i%2 == 0:
+                Delay_Cell_Time += Tfr_Delay_Cell[i%63]
             else:
-                if i%2 == 0:
-                    Delay_Cell_Time += Tfr_Delay_Cell[i%63]
-                else:
-                    Delay_Cell_Time += Trf_Delay_Cell[i%63]
+                Delay_Cell_Time += Trf_Delay_Cell[i%63]
             sum += Delay_Cell_Time
     return digital_code-1
 #=============================================================================#
@@ -52,16 +46,10 @@ def digital_to_time(digital_code, Tfr_Delay_Cell, Trf_Delay_Cell):
     sum = 0
     Delay_Cell_Time = 0
     for i in range(digital_code):
-        if (i/63)%2 == 0:
-            if i%2 == 0:
-                Delay_Cell_Time += Tfr_Delay_Cell[i%63]
-            else:
-                Delay_Cell_Time += Trf_Delay_Cell[i%63]
+        if i%2 == 0:
+            Delay_Cell_Time += Tfr_Delay_Cell[i%63]
         else:
-            if i%2 == 0:
-                Delay_Cell_Time += Tfr_Delay_Cell[i%63]
-            else:
-                Delay_Cell_Time += Trf_Delay_Cell[i%63]
+            Delay_Cell_Time += Trf_Delay_Cell[i%63]
     return Delay_Cell_Time
 #=============================================================================#
 ## Ideal transfer function
@@ -129,12 +117,12 @@ def TDC_Error_Calculate(average_bin_size1,average_bin_size2, Tfr_Delay_Cell, Trf
         TDC_Error1 += [i*average_bin_size1/ideal_bin_size-code_i]
         TDC_Error2 += [i*average_bin_size2/ideal_bin_size-code_i]
 
-    plt.plot(digital_code[1:], TDC_Error1, color='r',marker='.', linewidth=0.5, markersize=0.8, label='TDC_INL(bin size=$\mu+$)')
-    plt.plot(digital_code[1:], TDC_Error2, color='b',marker='+', linewidth=0.5, markersize=0.8, label='TDC_INL(bin size=$\mu-$)')
+    plt.plot(digital_code[1:], TDC_Error1, color='r',marker='.', linewidth=0.5, markersize=0.8, label='bin size=$\mu+$')
+    plt.plot(digital_code[1:], TDC_Error2, color='b',marker='+', linewidth=0.5, markersize=0.8, label='bin size=$\mu-$')
 
 #    plt.plot(digital_code[1:], TDC_Error1, color='r',marker='.', linewidth=0.5, markersize=0.8, label='TDC_INL(bin size=$\mu+\sigma$)')
 #    plt.plot(digital_code[1:], TDC_Error2, color='b',marker='+', linewidth=0.5, markersize=0.8, label='TDC_INL(bin size=$\mu-\sigma$)')
-    plt.title("TDC Error Estimation", family="Times New Roman", fontsize=12)
+    plt.title("TDC Measured Error Estimation", family="Times New Roman", fontsize=12)
     plt.xlabel("Digital Code [bins]", family="Times New Roman", fontsize=10)
     plt.ylabel("TDC Error [LSB]", family="Times New Roman", fontsize=10)
     # plt.ylim(-1,1)
@@ -248,7 +236,7 @@ def TOA_bin_size_bar(Tfr_Delay_Cell, Trf_Delay_Cell):
     plt.ylabel("bin size [ps]", family="Times New Roman", fontsize=10)
     plt.xticks(family="Times New Roman", fontsize=8)
     plt.yticks(family="Times New Roman", fontsize=8)
-    plt.ylim(bottom=16,top=24)
+    plt.ylim(bottom=0,top=25)
     plt.grid(linestyle='-.', linewidth=lw_grid)
     plt.legend(fontsize=8, edgecolor='green')
 
@@ -306,7 +294,7 @@ def main():
     #     TDC_INL_Calculate(average_bin_size, Tfr_Delay_Cell, Trf_Delay_Cell, average_times[i])
 
 #    TOA_Transfer_Function(Tfr_Delay_Cell, Trf_Delay_Cell)
-#    TOA_bin_size_bar(Tfr_Delay_Cell, Trf_Delay_Cell)
+    TOA_bin_size_bar(Tfr_Delay_Cell, Trf_Delay_Cell)
     average_times = [1, 10, 100, 1000]
 #    average_times = [1]
     average_bin = [[] for k in range(len(average_times))]
@@ -355,7 +343,7 @@ def main():
         bottom,top = plt.ylim()
         plt.vlines(actual_bin_size, bottom, top, colors='g', linewidth= 0.8, linestyles='-.', label='actual bin size = %.4f'%actual_bin_size)
 #        plt.vlines(mu, 0, 140, colors='b', linewidth= 0.8, linestyles='-.', label='actual bin size = %.4f'%actual_bin_size)
-        plt.xlabel("Calibration Bin Size", family="Times New Roman", fontsize=10)
+        plt.xlabel("Calibration Bin Size (ps)", family="Times New Roman", fontsize=10)
         plt.ylabel("Counts", family="Times New Roman", fontsize=10)
 #        plt.ylim(0, count_limit)
         plt.xticks(family="Times New Roman", fontsize=8)
